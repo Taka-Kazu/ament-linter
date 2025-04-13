@@ -4,19 +4,22 @@
   "description": "",
   "version": "0.0.1",
   "engines": {
-    "vscode": "^1.99.0"
+    "vscode": "^1.85.0"
   },
   "categories": [
     "Other"
   ],
-  "activationEvents": [],
+  "activationEvents": [
+    "onLanguage:cpp",
+    "onLanguage:python",
+    "onLanguage:cmake",
+    "onLanguage:xml"
+  ],
   "main": "./out/extension.js",
   "contributes": {
-    "commands": [
-      {
-        "command": "ament-linter.helloWorld",
-        "title": "Hello World"
-      }
+    "languages": [
+        { "id": "cpp", "aliases": ["C++"], "extensions": [".cpp", ".h", ".hpp"] },
+        { "id": "python", "aliases": ["Python"], "extensions": [".py"] }
     ]
   },
   "scripts": {
