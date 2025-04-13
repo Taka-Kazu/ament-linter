@@ -22,6 +22,26 @@
         { "id": "python", "aliases": ["Python"], "extensions": [".py"] }
     ]
   },
+  "properties": {
+    "amentLinter.enable": {
+      "type": "boolean",
+      "default": true,
+      "description": "Enable or disable the Ament Linter extension."
+    },
+    "amentLinter.tools": {
+      "type": "object",
+      "default": {
+        "ament_cpplint": true,
+        "ament_cppcheck": true,
+        "ament_copyright": true,
+        "ament_flake8": true,
+        "ament_pep257": true,
+        "ament_xmllint": true,
+        "ament_lint_cmake": true
+      },
+      "description": "Enable or disable specific ament linters."
+    }
+  },
   "scripts": {
     "vscode:prepublish": "npm run compile",
     "compile": "tsc -p ./",

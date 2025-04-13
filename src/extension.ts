@@ -20,6 +20,12 @@ const getToolsForFile = (doc: vscode.TextDocument): string[][] => {
     return [];
 };
 
+function isToolEnabled(toolName: string): boolean {
+    const config = vscode.workspace.getConfiguration('amentLinter');
+    const tools = config.get<Record<string, boolean>>('tools');
+    return tools?.[toolName] ?? true;
+}
+
 function parseXmlLint(output: string, filePath: string): vscode.Diagnostic[] {
     const diagnostics: vscode.Diagnostic[] = [];
     const lines = output.split('\n');
@@ -46,7 +52,7 @@ function parseXmlLint(output: string, filePath: string): vscode.Diagnostic[] {
 }
 
 export function activate(context: vscode.ExtensionContext) {
-    const collection = vscode.languages.createDiagnosticCollection('ament');
+    const collection = vscode.languages.createDiagnosticCollection('amentLinter');
     context.subscriptions.push(collection);
     context.subscriptions.push(vscode.workspace.onDidSaveTextDocument(doc => {
         runLinter(doc, collection);
@@ -68,6 +74,10 @@ export function runLinter(doc: vscode.TextDocument, collection: vscode.Diagnosti
 
     for (const toolCmd of tools) {
         const toolName = toolCmd[0];
+         if (!isToolEnabled(toolName)) {
+            console.log(`[ament-linter] Skipped ${toolName} (disabled in settings)`);
+            continue;
+        }
         const cmd = `/bin/bash -c "${toolCmd.join(' ')} ${doc.fileName}"`;
 
         cp.exec(cmd, { maxBuffer: 1024 * 1024 }, (err, stdout, stderr) => {
