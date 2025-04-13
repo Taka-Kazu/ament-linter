@@ -51,6 +51,32 @@ function parseXmlLint(output: string, filePath: string): vscode.Diagnostic[] {
     return diagnostics;
 }
 
+function parseGenericLint(output: string, filePath: string): vscode.Diagnostic[] {
+    const diagnostics: vscode.Diagnostic[] = [];
+    const lines = output.split('\n');
+    const regex = new RegExp(`^${filePath}:(\\d+):\\s+(.*)$`);
+    for (const line of lines) {
+        const match = line.match(regex);
+        if (match) {
+            const lineNum = parseInt(match[1]) - 1;
+            const message = match[2];
+            const range = new vscode.Range(lineNum, 0, lineNum, 1);
+            diagnostics.push(new vscode.Diagnostic(range, message, vscode.DiagnosticSeverity.Warning));
+        } else if (line.includes(filePath)) {
+            // fallback: show file-based error even if no line.
+            const message = line;
+            console.log(`Fallback message: ${message}`);
+            // If message starts with "Done", we can ignore it. (for ament_cpplint)
+            if (/^\s*Done/.test(line)) {
+                continue;
+            }
+            const range = new vscode.Range(0, 0, 0, 1);
+            diagnostics.push(new vscode.Diagnostic(range, message, vscode.DiagnosticSeverity.Warning));
+        }
+    }
+    return diagnostics;
+}
+
 export function activate(context: vscode.ExtensionContext) {
     const collection = vscode.languages.createDiagnosticCollection('amentLinter');
     context.subscriptions.push(collection);
@@ -92,29 +118,7 @@ export function runLinter(doc: vscode.TextDocument, collection: vscode.Diagnosti
             }
             else
             {
-                for (const line of lines) {
-                    // Generic error format: file:line:col: message
-                    const match = line.match(/^(.*?):(\d+):(?:(\d+):)?\s*(.*)$/);
-                    if (match) {
-                        const lineNum = parseInt(match[2]) - 1;
-                        const colNum = match[3] ? parseInt(match[3]) - 1 : 0;
-                        const message = `[${toolName}] ${match[4]}`;
-
-                        const range = new vscode.Range(lineNum, colNum, lineNum, colNum + 1);
-                        const diagnostic = new vscode.Diagnostic(range, message, vscode.DiagnosticSeverity.Warning);
-                        diagnostics.push(diagnostic);
-                    } else if (line.includes(doc.fileName)) {
-                        // fallback: show file-based error even if no line.
-                        const message = `[${toolName}] ${line}`;
-                        console.log(`Fallback message: ${message}`);
-                        // If message starts with "Done", we can ignore it. (for ament_cpplint)
-                        if (/^\s*Done/.test(line)) {
-                            continue;
-                        }
-                        const range = new vscode.Range(0, 0, 0, 1);
-                        diagnostics.push(new vscode.Diagnostic(range, message, vscode.DiagnosticSeverity.Warning));
-                    }
-                }
+                const diagnostics = parseGenericLint(output, doc.fileName);
                 collection.set(uri, diagnostics);
             }
         });
