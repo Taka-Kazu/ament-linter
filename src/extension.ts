@@ -11,7 +11,8 @@ const getToolsForFile = (doc: vscode.TextDocument): string[][] => {
         return [['ament_lint_cmake']];
     }
     if (doc.languageId === 'cpp') {
-        return [['ament_cpplint'], ['ament_cppcheck'], ['ament_copyright']];
+        // Uncrustify should run first.
+        return [['ament_uncrustify'], ['ament_cpplint'], ['ament_cppcheck'], ['ament_copyright']];
     }
     if (doc.languageId === 'python') {
         return [['ament_flake8'], ['ament_pep257'], ['ament_copyright']];
@@ -104,14 +105,20 @@ export function runLinter(doc: vscode.TextDocument, collection: vscode.Diagnosti
             console.log(`[ament-linter] Skipped ${toolName} (disabled in settings)`);
             continue;
         }
+        if (toolName === 'ament_uncrustify') {
+            const cmd = `/bin/bash -c "${toolCmd.join(' ')} --reformat ${doc.fileName}"`;
+            cp.exec(cmd, { maxBuffer: 1024 * 1024 }, (err, stdout, stderr) => {
+                if (err && !/with code style divergence/.test(err.message)) {
+                    vscode.window.showErrorMessage(`Error running ${toolName}: ${err.message}`);
+                }
+            });
+            continue;
+        }
+
         const cmd = `/bin/bash -c "${toolCmd.join(' ')} ${doc.fileName}"`;
 
         cp.exec(cmd, { maxBuffer: 1024 * 1024 }, (err, stdout, stderr) => {
             const output = stdout + stderr;
-            const lines = output.split('\n');
-            vscode.window.showInformationMessage(`Running ${toolName} on ${doc.fileName}`);
-            vscode.window.showInformationMessage(`Output: ${lines}`);
-
             if (toolName === 'ament_xmllint') {
                 const xmlDiagnostics = parseXmlLint(output, doc.fileName);
                 collection.set(uri, xmlDiagnostics);

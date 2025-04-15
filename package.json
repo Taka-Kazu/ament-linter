@@ -33,6 +33,7 @@
       "default": {
         "ament_cpplint": true,
         "ament_cppcheck": true,
+        "ament_uncrustify": true,
         "ament_copyright": true,
         "ament_flake8": true,
         "ament_pep257": true,
