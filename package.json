@@ -2,7 +2,7 @@
   "name": "ament-linter",
   "displayName": "ament-linter",
   "description": "Automatically run ament lint tools on save.",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "icon": "images/icon.png",
   "engines": {
     "vscode": "^1.85.0"
