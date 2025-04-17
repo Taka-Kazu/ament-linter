@@ -2,68 +2,51 @@
 
 ## Features
 
-Describe specific features of your extension including screenshots of your extension in action. Image paths are relative to this README file.
-
-For example if there is an image subfolder under your extension project workspace:
-
-\!\[feature X\]\(images/feature-x.png\)
-
-> Tip: Many popular extensions utilize animations. This is an excellent way to show off your extension! We recommend short, focused animations that are easy to follow.
+This extension provides linting support for ROS 2 packages using the `ament_lint` tool. It integrates with the Visual Studio Code editor to provide real-time feedback on code quality and style.
 
 ## Requirements
 
-If you have any requirements or dependencies, add a section describing those and how to install and configure them.
+- ament_copyright
+- ament_cppcheck
+- ament_cpplint
+- ament_flake8
+- ament_lint_cmake
+- ament_pep257
+- ament_uncrustify
+- ament_xmllint
+
+(You can install them by installing `ros-DISTRO-ament-lint-common`)
 
 ## Extension Settings
 
-Include if your extension adds any VS Code settings through the `contributes.configuration` extension point.
+Each of the ament lint tools can be configured in the settings.json file.
+The default setting is to enable all tools.
 
-For example:
+```json
+  "amentLinter": {
+    "tools": {
+      "ament_copyright": true,
+      "ament_cppcheck": true,
+      "ament_cpplint": true,
+      "ament_flake8": true,
+      "ament_lint_cmake": true,
+      "ament_pep257": true,
+      "ament_uncrustify": true,
+      "ament_xmllint": true
+     }
+  }
+```
+You can disable a tool by setting it to `false`.
 
-This extension contributes the following settings:
+> [!NOTE]
+> `ament_uncrustify` is a formatter rather than a linter. It will format the code in place.
+> If you use another formatter, you may want to disable it.
 
-* `myExtension.enable`: Enable/disable this extension.
-* `myExtension.thing`: Set to `blah` to do something.
 
 ## Known Issues
 
-Calling out known issues can help limit users opening duplicate issues against your extension.
+TBD
 
 ## Release Notes
 
-Users appreciate release notes as you update your extension.
-
-### 1.0.0
-
-Initial release of ...
-
-### 1.0.1
-
-Fixed issue #.
-
-### 1.1.0
-
-Added features X, Y, and Z.
-
----
-
-## Following extension guidelines
-
-Ensure that you've read through the extensions guidelines and follow the best practices for creating your extension.
-
-* [Extension Guidelines](https://code.visualstudio.com/api/references/extension-guidelines)
-
-## Working with Markdown
-
-You can author your README using Visual Studio Code. Here are some useful editor keyboard shortcuts:
-
-* Split the editor (`Cmd+\` on macOS or `Ctrl+\` on Windows and Linux).
-* Toggle preview (`Shift+Cmd+V` on macOS or `Shift+Ctrl+V` on Windows and Linux).
-* Press `Ctrl+Space` (Windows, Linux, macOS) to see a list of Markdown snippets.
-
-## For more information
-
-* [Visual Studio Code's Markdown Support](http://code.visualstudio.com/docs/languages/markdown)
-* [Markdown Syntax Reference](https://help.github.com/articles/markdown-basics/)
-
-**Enjoy!**
+TBD
