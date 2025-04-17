@@ -2,7 +2,7 @@
   "name": "ament-linter",
   "displayName": "ament-linter",
   "description": "Automatically run ament lint tools on save.",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "engines": {
     "vscode": "^1.85.0"
   },
@@ -18,8 +18,26 @@
   "main": "./out/extension.js",
   "contributes": {
     "languages": [
-        { "id": "cpp", "aliases": ["C++"], "extensions": [".cpp", ".h", ".hpp"] },
-        { "id": "python", "aliases": ["Python"], "extensions": [".py"] }
+      {
+        "id": "cpp",
+        "aliases": [
+          "C++"
+        ],
+        "extensions": [
+          ".cpp",
+          ".h",
+          ".hpp"
+        ]
+      },
+      {
+        "id": "python",
+        "aliases": [
+          "Python"
+        ],
+        "extensions": [
+          ".py"
+        ]
+      }
     ]
   },
   "properties": {
